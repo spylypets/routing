@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>CountryRouting</artifactId>
+	<artifactId>country-routing</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>CountryRouting</name>
 	<description>Country rounting test project</description>

@@ -2,16 +2,17 @@ package com.example.demo.service;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,20 +25,24 @@ public class RouteFinder {
 	
 	private static Map<?, ?> borderMap;
 	
-	public RouteFinder() {
+	
+	private ResourceLoader resourceLoader;
+	
+	@Autowired
+	public RouteFinder(ResourceLoader resourceLoader) {
 		
-		Scanner scanner = null;
+		String countryData = null;
+		Resource resource = resourceLoader.getResource("classpath:countries.json");
+		
 		try {
-			scanner = new Scanner(Paths.get("countries.json"), StandardCharsets.UTF_8.name());
+			countryData = resource.getContentAsString(StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			LOGGER.error("Country source file is not found.", e);
 		}
-		String content = scanner.useDelimiter("\\A").next();
-		scanner.close();
         ObjectMapper objectMapper = new ObjectMapper();
         List<HashMap<String, Object>> countries = null;
 		try {
-			countries = objectMapper.readValue(content, List.class);
+			countries = objectMapper.readValue(countryData, List.class);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -52,13 +57,6 @@ public class RouteFinder {
 		//return result != null && result.contains(destination) ? result : null; Now we check the result in the controller
 	}
 
-	public static void main(String[] args) {
-
-		RouteFinder finder = new RouteFinder();
-		List<String> route = finder.find("CZE", "ITA");
-		LOGGER.info("Found route: " + route);
-	}
-	
 	private List<String> find(String country, String destination, List<String> route) {
 
 		LOGGER.debug("country: " + country);

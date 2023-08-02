@@ -8,10 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.DefaultResourceLoader;
 
 public class RouteFinderTests {
 	
-	private RouteFinder finder = new RouteFinder();
+	private RouteFinder finder = new RouteFinder(new DefaultResourceLoader());
 	
 	@Test
 	public void testRouteExists() {
